@@ -162,7 +162,7 @@ FloorAlert fills that gap.
 #### Key Design Decisions
 
 - **QR code on every asset** — Eliminates searching and typing. Worker scans, asset is pre-filled. QR codes are cheap to print and laminate.
-- **Voice notes over text** — Workers on a noisy floor don't want to type. Voice-to-text or voice attachment.
+- **Voice notes over text** — Workers on a busy floor don't want to type. Voice-to-text or voice attachment.
 - **Photo capture** — One picture is worth a thousand paper form fields. Camera opens directly in the app.
 - **No required fields beyond asset + severity** — Every additional field reduces submission rate. Details are optional.
 - **Offline mode** — If WiFi is down, report is queued locally and syncs when connection returns. Critical for industrial environments.
