@@ -11,11 +11,11 @@
     const NOTIF_KEY = 'flooralert_notifs_v1';
     const ROLE_KEY = 'flooralert_role';
 
-    const ROLES = {
-        floor_worker: { label: 'Floor Worker', canReport: true, canViewOwn: true, canUpdateWO: false, canManage: false, canAdmin: false },
-        technician:   { label: 'Technician',   canReport: true, canViewOwn: true, canUpdateWO: true,  canManage: false, canAdmin: false },
-        manager:      { label: 'Manager',      canReport: true, canViewOwn: true, canUpdateWO: true,  canManage: true,  canAdmin: false },
-        admin:        { label: 'Admin',        canReport: true, canViewOwn: true, canUpdateWO: true,  canManage: true,  canAdmin: true  },
+    let ROLES = {
+        floor_worker: { label: 'Floor Worker', canReport: true, canViewOwn: true, canUpdateWO: false, canManage: false, canAdmin: false, canManageUsers: false },
+        technician:   { label: 'Technician',   canReport: true, canViewOwn: true, canUpdateWO: true,  canManage: false, canAdmin: false, canManageUsers: false },
+        manager:      { label: 'Manager',      canReport: true, canViewOwn: true, canUpdateWO: true,  canManage: true,  canAdmin: false, canManageUsers: true },
+        admin:        { label: 'Admin',        canReport: true, canViewOwn: true, canUpdateWO: true,  canManage: true,  canAdmin: true,  canManageUsers: true },
     };
 
     const CATEGORIES = ['Mechanical', 'Electrical', 'Safety', 'IT', 'Supply', 'Other'];
@@ -952,8 +952,8 @@
                 <h1 class="text-2xl font-bold text-white mb-6">More</h1>
 
                 <div class="space-y-3">
-                    <!-- User Management (Admin only) -->
-                    ${role.canAdmin ? `
+                    <!-- User Management (Manager/Admin) -->
+                    ${role.canManageUsers ? `
                     <button onclick="App.showUserManagement()" class="w-full bg-surface-900 border border-surface-800 rounded-xl p-4 flex items-center justify-between card-hover text-left">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-surface-800 rounded-lg flex items-center justify-center">
@@ -1597,13 +1597,28 @@
                                     <p class="font-medium text-white">${u.name}</p>
                                     <p class="text-xs text-surface-500">${u.id}</p>
                                 </div>
-                                <select onchange="App.updateUserRole('${u.id}', this.value)" class="bg-surface-700 border border-surface-600 rounded px-2 py-1 text-sm text-surface-200 focus:outline-none focus:ring-2 focus:ring-accent-500">
-                                    ${Object.entries(ROLES).map(([key, r]) => `<option value="${key}" ${u.role === key ? 'selected' : ''}>${r.label}</option>`).join('')}
-                                </select>
+                                <div class="flex items-center gap-2">
+                                    <select onchange="App.updateUserRole('${u.id}', this.value)" class="bg-surface-700 border border-surface-600 rounded px-2 py-1 text-sm text-surface-200 focus:outline-none focus:ring-2 focus:ring-accent-500">
+                                        ${Object.entries(ROLES).map(([key, r]) => `<option value="${key}" ${u.role === key ? 'selected' : ''}>${r.label}</option>`).join('')}
+                                    </select>
+                                    <button onclick="App.removeUser('${u.id}')" class="p-1 rounded hover:bg-danger-500/20 text-surface-500 hover:text-danger-400 transition-colors" title="Remove user">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
-                    <button onclick="App.closeModal()" class="w-full bg-surface-800 hover:bg-surface-700 text-surface-200 py-2.5 rounded-lg font-medium transition-colors">Close</button>
+                    <div class="border-t border-surface-700 pt-4">
+                        <h3 class="text-sm font-semibold text-surface-300 mb-3">Add New User</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="newUserName" placeholder="Full name" class="flex-1 bg-surface-800 border border-surface-700 rounded-lg px-3 py-2 text-sm text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-accent-500">
+                            <select id="newUserRole" class="bg-surface-800 border border-surface-700 rounded-lg px-3 py-2 text-sm text-surface-200 focus:outline-none focus:ring-2 focus:ring-accent-500">
+                                ${Object.entries(ROLES).map(([key, r]) => `<option value="${key}">${r.label}</option>`).join('')}
+                            </select>
+                            <button onclick="App.addUser()" class="btn-press bg-accent-600 hover:bg-accent-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Add</button>
+                        </div>
+                    </div>
+                    <button onclick="App.closeModal()" class="w-full bg-surface-800 hover:bg-surface-700 text-surface-200 py-2.5 rounded-lg font-medium transition-colors mt-6">Close</button>
                 </div>
             `);
         },
@@ -1617,7 +1632,71 @@
             }
         },
 
+        addUser() {
+            const nameInput = document.getElementById('newUserName');
+            const roleSelect = document.getElementById('newUserRole');
+            const name = nameInput.value.trim();
+            const role = roleSelect.value;
+            if (!name) { showToast('Please enter a name', 'error'); return; }
+            const id = 'USR-' + String(state.data.users.length + 1).padStart(3, '0');
+            state.data.users.push({ id, name, role });
+            saveData();
+            showToast(`${name} added as ${ROLES[role].label}`, 'success');
+            this.showUserManagement();
+        },
+
+        removeUser(userId) {
+            const user = state.data.users.find(u => u.id === userId);
+            if (!user) return;
+            if (!confirm(`Remove ${user.name}?`)) return;
+            state.data.users = state.data.users.filter(u => u.id !== userId);
+            saveData();
+            showToast(`${user.name} removed`, 'info');
+            this.showUserManagement();
+        },
+
+        addRole() {
+            const nameInput = document.getElementById('newRoleName');
+            const name = nameInput.value.trim();
+            if (!name) { showToast('Please enter a role name', 'error'); return; }
+            const key = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+            if (ROLES[key]) { showToast('Role already exists', 'error'); return; }
+            ROLES[key] = { label: name, canReport: true, canViewOwn: true, canUpdateWO: false, canManage: false, canAdmin: false, canManageUsers: false };
+            saveData();
+            showToast(`Role "${name}" created`, 'success');
+            this.showSettings();
+        },
+
+        removeRole(roleKey) {
+            if (Object.keys(ROLES).length <= 1) { showToast('Cannot remove the last role', 'error'); return; }
+            const role = ROLES[roleKey];
+            if (!role) return;
+            if (!confirm(`Remove role "${role.label}"?`)) return;
+            delete ROLES[roleKey];
+            state.data.users.forEach(u => { if (u.role === roleKey) u.role = Object.keys(ROLES)[0]; });
+            saveData();
+            showToast(`Role "${role.label}" removed`, 'info');
+            this.showSettings();
+        },
+
+        renameRole(roleKey, newName) {
+            const role = ROLES[roleKey];
+            if (role && newName.trim()) {
+                role.label = newName.trim();
+                saveData();
+            }
+        },
+
+        toggleRolePerm(roleKey, perm, value) {
+            const role = ROLES[roleKey];
+            if (role) {
+                role[perm] = value;
+                saveData();
+            }
+        },
+
         showSettings() {
+            const roleEntries = Object.entries(ROLES);
             showModal(`
                 <div class="p-6">
                     <h2 class="text-lg font-bold text-white mb-4">Settings</h2>
@@ -1639,6 +1718,34 @@
                             <span class="text-surface-400 text-sm">${(JSON.stringify(state.data).length / 1024).toFixed(1)} KB</span>
                         </div>
                     </div>
+
+                    <div class="border-t border-surface-700 mt-6 pt-4">
+                        <h3 class="text-sm font-semibold text-surface-300 mb-3">Role Configuration</h3>
+                        <div class="space-y-3 max-h-64 overflow-y-auto">
+                            ${roleEntries.map(([key, r]) => `
+                                <div class="bg-surface-800 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <input type="text" value="${r.label}" onchange="App.renameRole('${key}', this.value)" class="bg-surface-700 border border-surface-600 rounded px-2 py-1 text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent-500 w-32">
+                                        <button onclick="App.removeRole('${key}')" class="p-1 rounded hover:bg-danger-500/20 text-surface-500 hover:text-danger-400 transition-colors" title="Remove role">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-xs">
+                                        <label class="flex items-center gap-2 text-surface-400"><input type="checkbox" ${r.canReport ? 'checked' : ''} onchange="App.toggleRolePerm('${key}', 'canReport', this.checked)" class="rounded"> Report</label>
+                                        <label class="flex items-center gap-2 text-surface-400"><input type="checkbox" ${r.canUpdateWO ? 'checked' : ''} onchange="App.toggleRolePerm('${key}', 'canUpdateWO', this.checked)" class="rounded"> Edit WOs</label>
+                                        <label class="flex items-center gap-2 text-surface-400"><input type="checkbox" ${r.canManage ? 'checked' : ''} onchange="App.toggleRolePerm('${key}', 'canManage', this.checked)" class="rounded"> Manage</label>
+                                        <label class="flex items-center gap-2 text-surface-400"><input type="checkbox" ${r.canManageUsers ? 'checked' : ''} onchange="App.toggleRolePerm('${key}', 'canManageUsers', this.checked)" class="rounded"> Users</label>
+                                        <label class="flex items-center gap-2 text-surface-400"><input type="checkbox" ${r.canAdmin ? 'checked' : ''} onchange="App.toggleRolePerm('${key}', 'canAdmin', this.checked)" class="rounded"> Admin</label>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="flex gap-2 mt-3">
+                            <input type="text" id="newRoleName" placeholder="New role name" class="flex-1 bg-surface-800 border border-surface-700 rounded-lg px-3 py-2 text-sm text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-accent-500">
+                            <button onclick="App.addRole()" class="btn-press bg-accent-600 hover:bg-accent-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Add Role</button>
+                        </div>
+                    </div>
+
                     <button onclick="App.closeModal()" class="w-full bg-surface-800 hover:bg-surface-700 text-surface-200 py-2.5 rounded-lg font-medium transition-colors mt-6">Close</button>
                 </div>
             `);
