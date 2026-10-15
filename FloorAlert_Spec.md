@@ -795,6 +795,79 @@ NotificationLog
 | **Slack / Teams** | Notification channel for IT teams | Post-MVP |
 | **Accounting Software** (QuickBooks) | Cost tracking, parts purchasing | Future |
 
+### 6.7 Self-Hosted / Intranet Deployment
+
+FloorAlert can be deployed as a fully self-hosted intranet application for organizations that require data to remain on-premises (defense contractors, pharmaceutical manufacturers, utilities, air-gapped facilities).
+
+**Architecture:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Facility Network                      │
+│                                                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │   Floor       │  │   Floor       │  │   Manager     │  │
+│  │   Worker 1    │  │   Worker 2    │  │   Workstation │  │
+│  │   (Phone)     │  │   (Tablet)    │  │   (Browser)   │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
+│         │                 │                 │           │
+│         └────────────────┼─────────────────┘           │
+│                          │                             │
+│                   ┌──────┴──────┐                      │
+│                   │  FloorAlert  │                      │
+│                   │  Server      │                      │
+│                   │  (Docker)    │                      │
+│                   │              │                      │
+│                   │  FastAPI     │                      │
+│                   │  PostgreSQL  │                      │
+│                   │  Redis       │                      │
+│                   │  Nginx       │                      │
+│                   └──────────────┘                      │
+│                                                         │
+│  No internet required. All data stays on-site.          │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Self-Hosted Feature Adjustments:**
+
+| Feature | Cloud | Self-Hosted Intranet |
+|---|---|---|
+| Push notifications | Firebase (FCM) | Local WebSocket + in-app |
+| SMS notifications | Twilio | Optional: local SMS gateway or omit |
+| Email notifications | SendGrid / SES | Local SMTP relay or omit |
+| User authentication | Email + OAuth | LDAP / Active Directory or local accounts |
+| File storage | S3-compatible | Local disk / NAS |
+| Backups | Automated to S3 | Local backup script to NAS or external drive |
+| Updates | Automatic | Manual (Docker image pull) |
+| Offline mode | Syncs when internet returns | Always on — same network |
+
+**Deployment Options:**
+
+1. **Single server (Docker Compose)** — One Linux server or powerful workstation runs the entire stack. Suitable for 1-200 users. `docker-compose up -d` and you're running.
+
+2. **Raspberry Pi cluster** — For small facilities (1-50 users), a cluster of 3-4 Raspberry Pi 4/5 nodes running Docker Swarm. Ultra-low power, silent, cheap.
+
+3. **VM on existing infrastructure** — Deploy as a VMware/Hyper-V virtual machine. IT team manages it like any other server.
+
+4. **Air-gapped** — Fully isolated network. All features work except external SMS/email (which become optional). Data never leaves the facility.
+
+**Self-Hosted Requirements:**
+
+- Linux server (Ubuntu 22.04+ recommended) or Windows Server 2019+
+- 4 CPU cores, 8GB RAM, 100GB storage (scales with users)
+- Docker + Docker Compose
+- Optional: LDAP/AD for authentication
+- Optional: Local SMTP relay for email notifications
+- Optional: Local SMS gateway (e.g., GSM modem) for SMS notifications
+
+**Self-Hosted Pricing:**
+
+| Tier | Price | Includes |
+|---|---|---|
+| Self-Hosted License | $2,500 one-time | Full source, Docker deployment, 1 year support |
+| Self-Hosted Support | $500/year | Updates, security patches, email support |
+| Self-Hosted Enterprise | $5,000 one-time | Priority support, custom development, SLA |
+
 ---
 
 ## 7. MVP Scope
