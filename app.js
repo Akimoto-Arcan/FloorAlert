@@ -250,13 +250,14 @@
         }
     }
 
-    function addNotification(type, message) {
+    function addNotification(type, message, link = null) {
         const notif = {
             id: 'NOTIF-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
             type,
             message,
             read: false,
             date: new Date().toISOString(),
+            link,
         };
         state.notifications.unshift(notif);
         if (state.notifications.length > 50) state.notifications = state.notifications.slice(0, 50);
@@ -1053,7 +1054,7 @@
         }
 
         list.innerHTML = state.notifications.map(n => `
-            <div class="px-4 py-3 flex items-start gap-3 ${n.read ? 'opacity-60' : ''}" onclick="App.markNotifRead('${n.id}')">
+            <div class="px-4 py-3 flex items-start gap-3 ${n.read ? 'opacity-60' : ''} cursor-pointer hover:bg-surface-800/50 transition-colors" onclick="App.handleNotifClick('${n.id}')">
                 <div class="mt-0.5">${getNotifIcon(n.type)}</div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm text-surface-200">${n.message}</p>
@@ -1069,10 +1070,36 @@
             incident: '<svg class="w-4 h-4 text-danger-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>',
             wo: '<svg class="w-4 h-4 text-info-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>',
             pm: '<svg class="w-4 h-4 text-warn-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
-            asset: '<svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+            asset: '<svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h-5m10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
             system: '<svg class="w-4 h-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
         };
         return icons[type] || icons.system;
+    }
+
+    function handleNotifClick(notifId) {
+        const notif = state.notifications.find(n => n.id === notifId);
+        if (!notif) return;
+
+        // Mark as read
+        notif.read = true;
+        saveNotifications();
+        updateNotifBadge();
+        renderNotifications();
+
+        // Close notification panel
+        state.notifPanelOpen = false;
+        const panel = $('#notifPanel');
+        if (panel) panel.classList.add('hidden');
+
+        // Navigate to the linked view
+        if (notif.link && notif.link.view) {
+            navigate(notif.link.view);
+            // If the notification links to a specific work order, expand it
+            if (notif.link.view === 'workorders' && notif.link.id) {
+                state.expandedWO = notif.link.id;
+                render();
+            }
+        }
     }
 
     // ─── Event Handlers ───────────────────────────────────────────────────────
@@ -1121,6 +1148,10 @@
                 updateNotifBadge();
                 renderNotifications();
             }
+        },
+
+        handleNotifClick(notifId) {
+            handleNotifClick(notifId);
         },
 
         // Report Form
@@ -1222,7 +1253,7 @@
 
             state.data.incidents.unshift(incident);
             addActivity('incident_reported', `${incidentId} reported — ${asset.name} (${category}, ${state.reportForm.severity})`);
-            addNotification('incident', `New incident ${incidentId}: ${asset.name} — ${category} (${state.reportForm.severity})`);
+            addNotification('incident', `New incident ${incidentId}: ${asset.name} — ${category} (${state.reportForm.severity})`, { view: 'dashboard' });
 
             // Auto-create work order for high severity
             if (state.reportForm.severity === 'High') {
@@ -1239,7 +1270,7 @@
                     notes: [],
                 });
                 addActivity('wo_created', `${woId} auto-created from ${incidentId}`);
-                addNotification('wo', `Work order ${woId} auto-created for high-severity incident`);
+                addNotification('wo', `Work order ${woId} auto-created for high-severity incident`, { view: 'workorders', id: woId });
             }
 
             saveData();
@@ -1293,7 +1324,7 @@
                 wo.status = status;
                 saveData();
                 addActivity('wo_updated', `${id} status changed to ${status}`);
-                addNotification('wo', `Work order ${id} status changed to ${status}`);
+                addNotification('wo', `Work order ${id} status changed to ${status}`, { view: 'workorders', id: '${id}' });
                 showToast(`${id} updated to ${status}`, 'success');
                 render();
             }
@@ -1358,7 +1389,7 @@
                 wo.assignee = assignee;
                 saveData();
                 addActivity('wo_updated', `${woId} assigned to ${assignee}`);
-                addNotification('wo', `Work order ${woId} assigned to ${assignee}`);
+                addNotification('wo', `Work order ${woId} assigned to ${assignee}`, { view: 'workorders', id: woId });
                 closeModal();
                 showToast(`Assigned to ${assignee}`, 'success');
                 render();
@@ -1444,7 +1475,7 @@
 
             saveData();
             addActivity('wo_created', `${woId} created — ${title}`);
-            addNotification('wo', `New work order ${woId}: ${title}`);
+            addNotification('wo', `New work order ${woId}: ${title}`, { view: 'workorders', id: woId });
             closeModal();
             showToast(`Work order ${woId} created`, 'success');
             render();
@@ -1462,7 +1493,7 @@
                 asset.status = status;
                 saveData();
                 addActivity('asset_update', `${asset.name} status changed to ${status}`);
-                addNotification('asset', `${asset.name} is now ${status.replace('_', ' ')}`);
+                addNotification('asset', `${asset.name} is now ${status.replace('_', ' ')}`, { view: 'assets' });
                 showToast(`${asset.name} marked as ${status.replace('_', ' ')}`, 'success');
                 render();
             }
@@ -1524,7 +1555,7 @@
 
             saveData();
             addActivity('asset_update', `New asset added: ${name} (${id})`);
-            addNotification('asset', `New asset registered: ${name}`);
+            addNotification('asset', `New asset registered: ${name}`, { view: 'assets' });
             closeModal();
             showToast(`Asset ${name} added`, 'success');
             render();
@@ -1547,7 +1578,7 @@
                 pm.status = status;
                 saveData();
                 addActivity('pm_update', `${pm.id} status changed to ${status}`);
-                addNotification('pm', `PM ${pm.id} ${status.replace('_', ' ')}`);
+                addNotification('pm', `PM ${pm.id} ${status.replace('_', ' ')}`, { view: 'pm' });
                 showToast(`PM ${id} updated`, 'success');
                 render();
             }
