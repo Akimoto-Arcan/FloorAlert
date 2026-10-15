@@ -382,28 +382,28 @@
 
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover">
+                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover cursor-pointer" onclick="App.navigate('dashboard');setTimeout(()=>{const el=document.getElementById('incidentsSection');if(el)el.scrollIntoView({behavior:'smooth'})},100)" title="View open incidents">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs text-surface-400 font-medium uppercase tracking-wide">Open Incidents</span>
                             <svg class="w-5 h-5 text-danger-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                         </div>
                         <span class="text-2xl sm:text-3xl font-bold text-white">${openIncidents}</span>
                     </div>
-                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover">
+                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover cursor-pointer" onclick="App.navigate('workorders')" title="View active work orders">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs text-surface-400 font-medium uppercase tracking-wide">Active WOs</span>
                             <svg class="w-5 h-5 text-warn-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                         </div>
                         <span class="text-2xl sm:text-3xl font-bold text-white">${activeWOs}</span>
                     </div>
-                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover">
+                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover cursor-pointer" onclick="App.navigate('assets')" title="View assets">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs text-surface-400 font-medium uppercase tracking-wide">Assets Down</span>
                             <svg class="w-5 h-5 text-danger-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                         </div>
                         <span class="text-2xl sm:text-3xl font-bold ${assetsDown > 0 ? 'text-danger-400' : 'text-white'}">${assetsDown}</span>
                     </div>
-                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover">
+                    <div class="bg-surface-900 border border-surface-800 rounded-xl p-4 card-hover cursor-pointer" onclick="App.navigate('pm')" title="View preventive maintenance">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs text-surface-400 font-medium uppercase tracking-wide">PMs Due</span>
                             <svg class="w-5 h-5 text-info-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -462,7 +462,7 @@
                     </div>
 
                     <!-- Recent Incidents -->
-                    <div class="bg-surface-900 border border-surface-800 rounded-xl overflow-hidden">
+                    <div id="incidentsSection" class="bg-surface-900 border border-surface-800 rounded-xl overflow-hidden">
                         <div class="px-4 py-3 border-b border-surface-800 flex items-center justify-between">
                             <h2 class="font-semibold text-white">Recent Incidents</h2>
                             <button onclick="App.navigate('workorders')" class="text-xs text-accent-400 hover:text-accent-300">View All</button>
