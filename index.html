@@ -144,6 +144,10 @@
                             <svg class="w-4 h-4 text-surface-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </div>
 
+                        <!-- More (desktop) -->
+                        <button onclick="App.navigate('more')" class="p-2 rounded-lg hover:bg-surface-800 transition-colors text-surface-400 hover:text-surface-200" title="More">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                        </button>
                         <!-- Notification Bell -->
                         <button id="notifBell" class="relative p-2 rounded-lg hover:bg-surface-800 transition-colors" onclick="App.toggleNotifications()">
                             <svg class="w-5 h-5 text-surface-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
@@ -174,7 +178,7 @@
         </main>
 
         <!-- Bottom Navigation (Mobile) -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-surface-900/95 backdrop-blur-md border-t border-surface-800 sm:hidden z-40">
+        <nav class="fixed bottom-0 left-0 right-0 bg-surface-900/95 backdrop-blur-md border-t border-surface-800 z-40">
             <div class="flex items-center justify-around h-16">
                 <button onclick="App.navigate('report')" class="nav-btn flex flex-col items-center gap-0.5 px-3 py-1 text-surface-400 hover:text-accent-400 transition-colors" data-nav="report">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
