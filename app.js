@@ -1090,6 +1090,7 @@
         setRole(role) {
             if (ROLES[role]) {
                 state.currentRole = role;
+                state.currentView = 'dashboard';
                 saveRole();
                 showToast(`Switched to ${ROLES[role].label} view`, 'info');
                 render();
@@ -1702,6 +1703,7 @@
     function enterAsRole(role) {
         if (!ROLES[role]) return;
         state.currentRole = role;
+        state.currentView = 'dashboard';
         saveRole();
 
         // Update role switcher
