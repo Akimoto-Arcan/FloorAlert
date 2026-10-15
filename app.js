@@ -222,6 +222,7 @@
             case 'down': return 'bg-danger-500';
             case 'Open': return 'bg-danger-500/20 text-danger-400 border-danger-500/30';
             case 'In Progress': return 'bg-warn-500/20 text-warn-400 border-warn-500/30';
+            case 'Waiting on Parts': return 'bg-danger-500/20 text-danger-400 border-danger-500/30';
             case 'Resolved': return 'bg-accent-500/20 text-accent-400 border-accent-500/30';
             case 'overdue': return 'bg-danger-500/20 text-danger-400 border-danger-500/30';
             case 'due_this_week': return 'bg-warn-500/20 text-warn-400 border-warn-500/30';
@@ -618,7 +619,7 @@
 
                 <!-- Filter Tabs -->
                 <div class="flex gap-1 mb-4 bg-surface-900 border border-surface-800 rounded-lg p-1 overflow-x-auto">
-                    ${['All', 'Open', 'In Progress', 'Resolved'].map(s => `
+                    ${['All', 'Open', 'In Progress', 'Waiting on Parts', 'Resolved'].map(s => `
                         <button onclick="App.setWOFilter('${s}')" class="flex-1 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${filter === s ? 'bg-surface-700 text-white' : 'text-surface-400 hover:text-surface-200'}">${s}</button>
                     `).join('')}
                 </div>
@@ -674,6 +675,8 @@
                                             ${role.canUpdateWO ? `
                                                 ${wo.status === 'Open' ? `<button onclick="App.updateWOStatus('${wo.id}', 'In Progress')" class="btn-press bg-warn-600 hover:bg-warn-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Start Work</button>` : ''}
                                                 ${wo.status === 'In Progress' ? `<button onclick="App.updateWOStatus('${wo.id}', 'Resolved')" class="btn-press bg-accent-600 hover:bg-accent-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Mark Resolved</button>` : ''}
+                                                ${wo.status === 'In Progress' ? `<button onclick="App.updateWOStatus('${wo.id}', 'Waiting on Parts')" class="btn-press bg-danger-600 hover:bg-danger-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Waiting on Parts</button>` : ''}
+                                                ${wo.status === 'Waiting on Parts' ? `<button onclick="App.updateWOStatus('${wo.id}', 'In Progress')" class="btn-press bg-warn-600 hover:bg-warn-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Parts Received</button>` : ''}
                                                 ${wo.status === 'Resolved' ? `<button onclick="App.updateWOStatus('${wo.id}', 'Open')" class="btn-press bg-surface-700 hover:bg-surface-600 text-surface-200 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Reopen</button>` : ''}
                                                 <button onclick="App.showAddNote('${wo.id}')" class="btn-press bg-surface-800 hover:bg-surface-700 border border-surface-700 text-surface-300 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Add Note</button>
                                                 <button onclick="App.showAssignWO('${wo.id}')" class="btn-press bg-surface-800 hover:bg-surface-700 border border-surface-700 text-surface-300 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">Assign</button>
