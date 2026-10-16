@@ -1112,6 +1112,74 @@
     }
 
     // ─── Public API ───────────────────────────────────────────────────────────
+    function showLANSetup() {
+        showModal(`
+            <div class="p-6">
+                <h2 class="text-lg font-bold text-white mb-4">Self-Hosted LAN Setup</h2>
+                <p class="text-surface-300 text-sm mb-4">FloorAlert runs entirely on your own network. No cloud, no internet, no subscription. One server, all devices connect.</p>
+
+                <div class="bg-surface-800 rounded-xl p-4 mb-4">
+                    <h3 class="text-sm font-semibold text-white mb-3">Network Diagram</h3>
+                    <div class="font-mono text-xs text-surface-300 space-y-1">
+                        <p class="text-accent-400">┌─ Facility Network ─────────────────────────────┐</p>
+                        <p>│                                                │</p>
+                        <p>│  [Phone]──WiFi──┐                              │</p>
+                        <p>│  [Tablet]─WiFi──┼──► [FloorAlert Server]        │</p>
+                        <p>│  [Laptop]─WiFi──┘    (any old PC or Raspberry Pi) │</p>
+                        <p>│                                                │</p>
+                        <p>│  No internet required. All data stays on-site.  │</p>
+                        <p class="text-accent-400">└────────────────────────────────────────────────┘</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 mb-4">
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">1. Install the Server</h3>
+                        <p class="text-xs text-surface-400 mb-2">On any computer on your network (Windows, Linux, or Mac):</p>
+                        <div class="bg-surface-900 rounded-lg p-3 font-mono text-xs text-accent-300">
+                            docker run -d -p 8080:8080 flooralert/server:latest
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">2. Connect Devices</h3>
+                        <p class="text-xs text-surface-400 mb-2">On each phone, tablet, or computer:</p>
+                        <ol class="text-xs text-surface-400 space-y-1 list-decimal list-inside">
+                            <li>Connect to the facility WiFi network</li>
+                            <li>Open a browser</li>
+                            <li>Enter the server address: <span class="text-accent-300 font-mono">http://192.168.1.100:8080</span></li>
+                            <li>Log in with your credentials</li>
+                        </ol>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">3. That's It</h3>
+                        <p class="text-xs text-surface-400">All devices share the same data in real time. No internet, no cloud, no monthly fees.</p>
+                    </div>
+                </div>
+
+                <div class="bg-surface-800 rounded-lg p-3 mb-4">
+                    <h3 class="text-xs font-semibold text-surface-300 mb-2">Minimum Server Requirements</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-surface-400">
+                        <div>CPU: 2 cores</div>
+                        <div>RAM: 4 GB</div>
+                        <div>Storage: 20 GB</div>
+                        <div>Network: Ethernet or WiFi</div>
+                    </div>
+                    <p class="text-xs text-surface-500 mt-2">Runs on a Raspberry Pi 4, old laptop, or existing server.</p>
+                </div>
+
+                <div class="bg-accent-500/10 border border-accent-500/20 rounded-lg p-3 mb-4">
+                    <p class="text-xs text-accent-300">
+                        <strong>Why self-hosted?</strong> Your maintenance data never leaves your facility. No internet outage can stop your team. No per-user pricing. No vendor lock-in. You own it.
+                    </p>
+                </div>
+
+                <button onclick="App.closeModal()" class="w-full bg-surface-800 hover:bg-surface-700 text-surface-200 py-2.5 rounded-lg font-medium transition-colors">Close</button>
+            </div>
+        `);
+    }
+
     window.App = {
         // Navigation
         navigate,
@@ -1831,6 +1899,7 @@
         // Landing page
         showLanding,
         enterAsRole,
+        showLANSetup,
     };
 
     // ─── Landing Page ─────────────────────────────────────────────────────────
