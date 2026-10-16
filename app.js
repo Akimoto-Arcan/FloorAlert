@@ -1118,18 +1118,34 @@
                 <h2 class="text-lg font-bold text-white mb-4">Self-Hosted LAN Setup</h2>
                 <p class="text-surface-300 text-sm mb-4">FloorAlert runs entirely on your own network. No cloud, no internet, no subscription. One server, all devices connect.</p>
 
-                <div class="bg-surface-800 rounded-xl p-4 mb-4">
-                    <h3 class="text-sm font-semibold text-white mb-3">Network Diagram</h3>
-                    <div class="font-mono text-xs text-surface-300 space-y-1">
-                        <p class="text-accent-400">┌─ Facility Network ─────────────────────────────┐</p>
-                        <p>│                                                │</p>
-                        <p>│  [Phone]──WiFi──┐                              │</p>
-                        <p>│  [Tablet]─WiFi──┼──► [FloorAlert Server]        │</p>
-                        <p>│  [Laptop]─WiFi──┘    (any old PC or Raspberry Pi) │</p>
-                        <p>│                                                │</p>
-                        <p>│  No internet required. All data stays on-site.  │</p>
-                        <p class="text-accent-400">└────────────────────────────────────────────────┘</p>
+                <div class="bg-surface-800 rounded-xl p-5 mb-4">
+                    <h3 class="text-sm font-semibold text-white mb-4">Network Diagram</h3>
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="flex flex-col gap-2">
+                            <div class="bg-surface-700 rounded-lg px-3 py-2 text-center">
+                                <svg class="w-5 h-5 text-accent-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                <span class="text-xs text-surface-300">Phone</span>
+                            </div>
+                            <div class="bg-surface-700 rounded-lg px-3 py-2 text-center">
+                                <svg class="w-5 h-5 text-accent-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                <span class="text-xs text-surface-300">Tablet</span>
+                            </div>
+                            <div class="bg-surface-700 rounded-lg px-3 py-2 text-center">
+                                <svg class="w-5 h-5 text-accent-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                <span class="text-xs text-surface-300">Laptop</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg class="w-8 h-8 text-accent-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                            <span class="text-xs text-surface-500 mt-1">WiFi</span>
+                        </div>
+                        <div class="bg-accent-500/10 border border-accent-500/30 rounded-xl p-4 text-center">
+                            <svg class="w-8 h-8 text-accent-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+                            <p class="text-sm font-semibold text-white">FloorAlert Server</p>
+                            <p class="text-xs text-surface-400">Any PC or Raspberry Pi</p>
+                        </div>
                     </div>
+                    <p class="text-xs text-surface-500 text-center mt-3">No internet required. All data stays on-site.</p>
                 </div>
 
                 <div class="space-y-4 mb-4">
@@ -1186,18 +1202,34 @@
                 <h2 class="text-lg font-bold text-white mb-4">Cloud Hosting Setup</h2>
                 <p class="text-surface-300 text-sm mb-4">FloorAlert hosted in the cloud. Access from anywhere with an internet connection. No server to maintain.</p>
 
-                <div class="bg-surface-800 rounded-xl p-4 mb-4">
-                    <h3 class="text-sm font-semibold text-white mb-3">Cloud Architecture</h3>
-                    <div class="font-mono text-xs text-surface-300 space-y-1">
-                        <p class="text-info-400">┌─ Internet ──────────────────────────────────────┐</p>
-                        <p>│                                                │</p>
-                        <p>│  [Phone]──┐                                    │</p>
-                        <p>│  [Tablet]─┼──► [Cloud Server]                  │</p>
-                        <p>│  [Laptop]─┘    (AWS / Azure / GCP)            │</p>
-                        <p>│                                                │</p>
-                        <p>│  Encrypted. Backups. 99.9% uptime.           │</p>
-                        <p class="text-info-400">└────────────────────────────────────────────────┘</p>
+                <div class="bg-surface-800 rounded-xl p-5 mb-4">
+                    <h3 class="text-sm font-semibold text-white mb-4">Cloud Architecture</h3>
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="flex flex-col gap-2">
+                            <div class="bg-surface-700 rounded-lg px-3 py-2 text-center">
+                                <svg class="w-5 h-5 text-info-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                <span class="text-xs text-surface-300">Phone</span>
+                            </div>
+                            <div class="bg-surface-700 rounded-lg px-3 py-2 text-center">
+                                <svg class="w-5 h-5 text-info-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                <span class="text-xs text-surface-300">Tablet</span>
+                            </div>
+                            <div class="bg-surface-700 rounded-lg px-3 py-2 text-center">
+                                <svg class="w-5 h-5 text-info-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                <span class="text-xs text-surface-300">Laptop</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <svg class="w-8 h-8 text-info-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                            <span class="text-xs text-surface-500 mt-1">Internet</span>
+                        </div>
+                        <div class="bg-info-500/10 border border-info-500/30 rounded-xl p-4 text-center">
+                            <svg class="w-8 h-8 text-info-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                            <p class="text-sm font-semibold text-white">Cloud Server</p>
+                            <p class="text-xs text-surface-400">AWS / Azure / GCP</p>
+                        </div>
                     </div>
+                    <p class="text-xs text-surface-500 text-center mt-3">Encrypted. Backups. 99.9% uptime.</p>
                 </div>
 
                 <div class="space-y-4 mb-4">
