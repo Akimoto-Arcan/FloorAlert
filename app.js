@@ -1180,6 +1180,83 @@
         `);
     }
 
+    function showCloudSetup() {
+        showModal(`
+            <div class="p-6">
+                <h2 class="text-lg font-bold text-white mb-4">Cloud Hosting Setup</h2>
+                <p class="text-surface-300 text-sm mb-4">FloorAlert hosted in the cloud. Access from anywhere with an internet connection. No server to maintain.</p>
+
+                <div class="bg-surface-800 rounded-xl p-4 mb-4">
+                    <h3 class="text-sm font-semibold text-white mb-3">Cloud Architecture</h3>
+                    <div class="font-mono text-xs text-surface-300 space-y-1">
+                        <p class="text-info-400">┌─ Internet ──────────────────────────────────────┐</p>
+                        <p>│                                                │</p>
+                        <p>│  [Phone]──┐                                    │</p>
+                        <p>│  [Tablet]─┼──► [Cloud Server]                  │</p>
+                        <p>│  [Laptop]─┘    (AWS / Azure / GCP)            │</p>
+                        <p>│                                                │</p>
+                        <p>│  Encrypted. Backups. 99.9% uptime.           │</p>
+                        <p class="text-info-400">└────────────────────────────────────────────────┘</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 mb-4">
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">1. Sign Up</h3>
+                        <p class="text-xs text-surface-400 mb-2">Create an account and choose a plan:</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-surface-900 rounded-lg p-3 text-center">
+                                <p class="text-xs text-surface-500 mb-1">Starter</p>
+                                <p class="text-sm font-bold text-white">$49/mo</p>
+                                <p class="text-xs text-surface-500">Up to 25 users</p>
+                            </div>
+                            <div class="bg-surface-900 rounded-lg p-3 text-center border border-accent-500/30">
+                                <p class="text-xs text-accent-400 mb-1">Professional</p>
+                                <p class="text-sm font-bold text-white">$99/mo</p>
+                                <p class="text-xs text-surface-500">Up to 100 users</p>
+                            </div>
+                            <div class="bg-surface-900 rounded-lg p-3 text-center">
+                                <p class="text-xs text-surface-500 mb-1">Enterprise</p>
+                                <p class="text-sm font-bold text-white">Custom</p>
+                                <p class="text-xs text-surface-500">Unlimited users</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">2. Invite Your Team</h3>
+                        <p class="text-xs text-surface-400">Send invite links to your team. They can join from any device — phone, tablet, or computer.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">3. Start Using It</h3>
+                        <p class="text-xs text-surface-400">No installation, no server, no IT required. Just log in and go.</p>
+                    </div>
+                </div>
+
+                <div class="bg-surface-800 rounded-lg p-3 mb-4">
+                    <h3 class="text-xs font-semibold text-surface-300 mb-2">What's Included</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-surface-400">
+                        <div class="flex items-center gap-2"><svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Automatic backups</div>
+                        <div class="flex items-center gap-2"><svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> 99.9% uptime SLA</div>
+                        <div class="flex items-center gap-2"><svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> SSL encryption</div>
+                        <div class="flex items-center gap-2"><svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Priority support</div>
+                        <div class="flex items-center gap-2"><svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Mobile apps</div>
+                        <div class="flex items-center gap-2"><svg class="w-3.5 h-3.5 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> API access</div>
+                    </div>
+                </div>
+
+                <div class="bg-info-500/10 border border-info-500/20 rounded-lg p-3 mb-4">
+                    <p class="text-xs text-info-300">
+                        <strong>Cloud vs LAN?</strong> Cloud is easier — no server to maintain, works from anywhere, automatic updates. LAN is better for facilities with no internet or strict data privacy requirements. Choose what fits your facility.
+                    </p>
+                </div>
+
+                <button onclick="App.closeModal()" class="w-full bg-surface-800 hover:bg-surface-700 text-surface-200 py-2.5 rounded-lg font-medium transition-colors">Close</button>
+            </div>
+        `);
+    }
+
     window.App = {
         // Navigation
         navigate,
@@ -1900,6 +1977,7 @@
         showLanding,
         enterAsRole,
         showLANSetup,
+        showCloudSetup,
     };
 
     // ─── Landing Page ─────────────────────────────────────────────────────────
